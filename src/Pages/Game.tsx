@@ -69,6 +69,12 @@ export default () => {
                 if (nickname === Object.keys(snapshot.val())[0]) setIsHost(true);
             }
         });
+        const cardsRef = ref(database, "cards");
+        onValue(cardsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setCards(snapshot.val());
+            }
+        });
         let gameCardsRef = ref(database, "game/cards");
         onValue(gameCardsRef, (snapshot) => {
             if (snapshot.exists()) {
@@ -122,17 +128,6 @@ export default () => {
         });
     }
 
-    useEffect(() => {
-        if (isHost) {
-            const cardsRef = ref(database, "cards");
-            onValue(cardsRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    setCards(snapshot.val());
-                }
-            });
-        }
-    }, [isHost]);
-
     const shuffleBothPiles = () => {
         const shuffledBlack = shuffleCards('black') || [];
         const shuffledWhite = shuffleCards('white') || [];
@@ -159,7 +154,7 @@ export default () => {
         if (isHost && gameState?.cards) {
             dealWhiteCards();
         }
-    }, [gameStateExists, cards.black, cards.white]);
+    }, [gameStateExists, cards.black, cards.white, isHost]);
 
     useEffect(() => {
         getBlackCardText();
