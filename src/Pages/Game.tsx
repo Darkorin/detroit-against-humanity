@@ -33,8 +33,17 @@ export default () => {
     const [gameStateExists, setGameStateExists] = useState<boolean>(true);
     const [gameState, setGameState] = useState<GameState | undefined>();
     const [hand, setHand] = useState<string[]>([]);
+    const [blackCardText, setBlackCardText] = useState<string>("");
 
     const playersRef = ref(database, 'game/players');
+
+    const getBlackCardText = () => {
+        const cardIndex = gameState?.cards?.black?.index || 0;
+        const cardSeed = gameState?.cards?.black?.seed;
+        if (cardSeed) {
+            setBlackCardText(cards?.black[cardSeed[cardIndex]]);
+        } else setBlackCardText("");
+    }
 
     useEffect(() => {
         const nickname = localStorage.getItem('nickname');
@@ -42,15 +51,15 @@ export default () => {
         const playerRef = ref(database, `game/players/${nickname}`);
         onValue(playerRef, (snapshot) => {
             if (snapshot.exists()) {
-                sessionStorage.setItem('score', snapshot.val().score);
+                sessionStorage.setItem('score', snapshot.val().score || '0');
                 sessionStorage.setItem('hand', JSON.stringify(snapshot.val().hand) || '[]');
                 setHand(snapshot.val().hand);
             } else {
                 const score = sessionStorage.getItem('score');
                 const hand = sessionStorage.getItem('hand');
-                set(playerRef, { 
-                    score: score ? parseInt(score) : 0, 
-                    hand: hand ? JSON.parse(hand) : [] 
+                set(playerRef, {
+                    score: score ? parseInt(score) : 0,
+                    hand: hand ? JSON.parse(hand) : []
                 });
             }
         });
@@ -79,30 +88,33 @@ export default () => {
     }, []);
 
     const shuffleCards = (color: 'black' | 'white') => {
-        let shuffled = Object.keys(cards[color])
-            .map(value => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value);
-        const gameCardRef = ref(database, `game/cards/${color}`);
-        set(gameCardRef, { seed: shuffled, index: 0 });
-        setGameState({
-            ...gameState,
-            cards: {
-                ...gameState?.cards,
-                [color]: {
-                    seed: shuffled,
-                    index: 0
-                }
-            }
-        });
+        if (Object.keys(cards[color]).length > 0) {
+            let shuffled = Object.keys(cards[color])
+                .map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+            const gameCardRef = ref(database, `game/cards/${color}`);
+            set(gameCardRef, { seed: shuffled, index: 0 });
+            return shuffled;
+        }
     }
 
     const dealWhiteCards = () => {
         let cardIndex = gameState?.cards?.white?.index || 0;
         Object.values(players).forEach((player, index) => {
             const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
-            if(cardIndex+5 > (gameState?.cards?.white?.seed?.length || 0)) {
-                shuffleCards('white');
+            if (cardIndex + 5 > (gameState?.cards?.white?.seed?.length || 0)) {
+                const shuffledWhite = shuffleCards('white') || [];
+                setGameState({
+                    ...gameState,
+                    cards: {
+                        ...gameState?.cards,
+                        white: {
+                            index: 0,
+                            seed: shuffledWhite
+                        }
+                    }
+                })
                 cardIndex = 0;
             };
             set(playerHandRef, gameState?.cards?.white?.seed?.slice(cardIndex, cardIndex + 5) || []);
@@ -121,28 +133,43 @@ export default () => {
         }
     }, [isHost]);
 
+    const shuffleBothPiles = () => {
+        const shuffledBlack = shuffleCards('black') || [];
+        const shuffledWhite = shuffleCards('white') || [];
+        setGameState({
+            ...gameState,
+            cards: {
+                black: {
+                    index: 0,
+                    seed: shuffledBlack
+                }, 
+                white: {
+                    index: 0,
+                    seed: shuffledWhite
+                }
+            }
+        })
+    }
+
     useEffect(() => {
-        if (isHost && cards.black && cards.white && !gameStateExists) {
-            shuffleCards('black');
-            shuffleCards('white');
-            dealWhiteCards();
+        if (isHost && Object.keys(cards.black).length > 0 && Object.keys(cards.white).length > 0 && !gameStateExists) {
+            shuffleBothPiles();
             setGameStateExists(true);
+        }
+        if (isHost && gameState?.cards) {
+            dealWhiteCards();
         }
     }, [gameStateExists, cards.black, cards.white]);
 
-    const getBlackCardText = () => {
-        const cardIndex = gameState?.cards?.black?.index || 0;
-        const cardSeed = gameState?.cards?.black?.seed;
-        if (cardSeed) {
-            return cards?.black[cardSeed[cardIndex]];
-        } else return "";
-    }
+    useEffect(() => {
+        getBlackCardText();
+    }, [gameState, cards.black, cards.white]);
 
     return (
         <div className="row col-12">
             <div className="col-11">
                 <h1 className="offset-md-4">Detroit Against Humanity<span className="offset-3"><Link to="/">Home</Link></span></h1>
-                <Card color="black" text={getBlackCardText()} />
+                <Card color="black" text={blackCardText} />
                 <div className="row col offset-1">
                     {hand?.map(card => <Card color="white" text={cards.white[card]} />)}
                 </div>
