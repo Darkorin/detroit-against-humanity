@@ -60,6 +60,15 @@ export default () => {
                 if (nickname === Object.keys(snapshot.val())[0]) setIsHost(true);
             }
         });
+        let gameCardsRef = ref(database, "game/cards");
+        onValue(gameCardsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setGameStateExists(true);
+                setGameState({ ...gameState, cards: snapshot.val() });
+            } else {
+                setGameStateExists(false);
+            }
+        });
         window.addEventListener('beforeunload', () => {
             remove(playerRef);
         });
@@ -107,15 +116,6 @@ export default () => {
             onValue(cardsRef, (snapshot) => {
                 if (snapshot.exists()) {
                     setCards(snapshot.val());
-                }
-            });
-            let gameCardsRef = ref(database, "game/cards");
-            onValue(gameCardsRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    setGameStateExists(true);
-                    setGameState({ ...gameState, cards: snapshot.val() });
-                } else {
-                    setGameStateExists(false);
                 }
             });
         }
