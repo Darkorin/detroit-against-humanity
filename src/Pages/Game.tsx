@@ -139,7 +139,7 @@ export default () => {
                     {hand.map(card => <Card color="white" text={cards.white[card]} />)}
                 </div>
             </div>
-            <div className="col-1" style={{ borderLeft: '1px solid black', maxHeight: '100%' }}>
+            <div className="col-1" style={{ borderLeft: '1px solid black', minHeight: '100vh' }}>
                 <h3>Scoreboard:</h3>
                 {Object.keys(players).map((player, index) => <p key={index}>{player}: {players[player].score}</p>)}
             </div>
