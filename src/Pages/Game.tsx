@@ -69,16 +69,6 @@ export default () => {
         }
     }, []);
 
-    const dealWhiteCards = () => {
-        let cardIndex = gameState?.cards?.white?.index || 0;
-        Object.values(players).forEach((player, index) => {
-            const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
-            if(cardIndex+5 > (gameState?.cards?.white?.seed.length || 0)) shuffleCards('white');
-            set(playerHandRef, gameState?.cards?.white?.seed.slice(cardIndex, cardIndex + 5));
-            cardIndex = cardIndex + 6;
-        });
-    }
-
     const shuffleCards = (color: 'black' | 'white') => {
         let shuffled = Object.keys(cards[color])
             .map(value => ({ value, sort: Math.random() }))
@@ -95,6 +85,19 @@ export default () => {
                     index: 0
                 }
             }
+        });
+    }
+
+    const dealWhiteCards = () => {
+        let cardIndex = gameState?.cards?.white?.index || 0;
+        Object.values(players).forEach((player, index) => {
+            const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
+            if(cardIndex+5 > (gameState?.cards?.white?.seed.length || 0)) {
+                shuffleCards('white');
+                cardIndex = 0;
+            };
+            set(playerHandRef, gameState?.cards?.white?.seed.slice(cardIndex, cardIndex + 5));
+            cardIndex = cardIndex + 6;
         });
     }
 
@@ -136,7 +139,7 @@ export default () => {
                     {hand.map(card => <Card color="white" text={cards.white[card]} />)}
                 </div>
             </div>
-            <div className="col-1" style={{ borderLeft: '1px solid black', height: '100vh' }}>
+            <div className="col-1" style={{ borderLeft: '1px solid black', maxHeight: '100%' }}>
                 <h3>Scoreboard:</h3>
                 {Object.keys(players).map((player, index) => <p key={index}>{player}: {players[player].score}</p>)}
             </div>
