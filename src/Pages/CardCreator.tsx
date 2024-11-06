@@ -42,7 +42,7 @@ export default () => {
 
     return (
         <div>
-            <h1>Create Your Cards Here!</h1>
+            <h1 className="offset-4">Create Your Cards Here!</h1>
             <div className="row offset-4">
                 <Card color="black" text="Enter Text Below" />
                 <Card color="white" text="Enter Text Below" />
@@ -55,7 +55,7 @@ export default () => {
                 <button style={{ width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
                 <button style={{ width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
             </div>
-            <div className="row">
+            <div className="row offset-1">
                 {Object.values(cards.black).map((card, index) => <Card color="black" text={card} deleteBtn handleDelete={() => handleDelete('black', index)}/>)}
                 {Object.values(cards.white).map((card, index) => <Card color="white" text={card} deleteBtn handleDelete={() => handleDelete('white', index)} />)}
             </div>
