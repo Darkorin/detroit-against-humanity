@@ -66,7 +66,11 @@ export default () => {
         onValue(playersRef, (snapshot) => {
             if (snapshot.exists()) {
                 setPlayers(snapshot.val());
-                if (nickname === Object.keys(snapshot.val())[0]) setIsHost(true);
+                if (nickname === Object.keys(snapshot.val())[0]) {
+                    setIsHost(true);
+                } else {
+                    setIsHost(false)
+                }
             }
         });
         const cardsRef = ref(database, "cards");
@@ -84,13 +88,6 @@ export default () => {
                 setGameStateExists(false);
             }
         });
-        window.addEventListener('beforeunload', () => {
-            remove(playerRef);
-        });
-        return () => {
-            remove(playerRef);
-            setIsHost(false);
-        }
     }, []);
 
     const shuffleCards = (color: 'black' | 'white') => {
@@ -137,7 +134,7 @@ export default () => {
                 black: {
                     index: 0,
                     seed: shuffledBlack
-                }, 
+                },
                 white: {
                     index: 0,
                     seed: shuffledWhite
