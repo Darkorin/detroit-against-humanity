@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Card from "../Components/Card";
 import { useSelector } from "react-redux";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { onValue, push, ref, remove, set } from "firebase/database";
 
 interface ICard {
     [key: string]: string
 }
 
 export default () => {
-    const firebaseApp = useSelector((state: any) => state?.firebase?.firebaseApp);
     const database = useSelector((state: any) => state?.firebase?.database);
-    const db = getDatabase(firebaseApp);
 
     const [blackCardState, setBlackCardState] = useState<string>("");
     const [whiteCardState, setWhiteCardState] = useState<string>("");
@@ -26,7 +24,7 @@ export default () => {
 
 
     useEffect(() => {
-        const cardsRef = ref(db, "cards");
+        const cardsRef = ref(database, "cards");
         onValue(cardsRef, (snapshot) => {
             if (snapshot.exists()) {
                 setCards(snapshot.val());
@@ -35,6 +33,12 @@ export default () => {
             }
         });
     }, []);
+
+    const handleDelete = (type: 'black' | 'white', index: number) => {
+        const cardKey = Object.keys(cards[type])[index];
+        const cardsListRef = ref(database, `cards/${type}/${cardKey}`);
+        remove(cardsListRef)
+    };
 
     return (
         <div>
@@ -52,8 +56,8 @@ export default () => {
                 <button style={{ width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
             </div>
             <div className="row">
-                {Object.values(cards.black).map(card => <Card color="black" text={card}/>)}
-                {Object.values(cards.white).map(card => <Card color="white" text={card}/>)}
+                {Object.values(cards.black).map((card, index) => <Card color="black" text={card} deleteBtn handleDelete={() => handleDelete('black', index)}/>)}
+                {Object.values(cards.white).map((card, index) => <Card color="white" text={card} deleteBtn handleDelete={() => handleDelete('white', index)} />)}
             </div>
         </div>
     );

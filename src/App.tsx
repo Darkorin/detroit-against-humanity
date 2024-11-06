@@ -21,15 +21,15 @@ const firebaseConfig = {
 export default () => {
   const dispatch = useDispatch();
   const firebaseApp = initializeApp(firebaseConfig);
+  const database = getDatabase(firebaseApp);
+  dispatch(
+    storeFirebase({
+      database,
+      firebaseApp
+    })
+  );
 
   useEffect(() => {
-    const database = getDatabase(firebaseApp);
-    dispatch(
-      storeFirebase({
-        database,
-        firebaseApp
-      })
-    );
 
     const cmsRef = ref(database, "cms");
     onValue(cmsRef, (snapshot) => {
