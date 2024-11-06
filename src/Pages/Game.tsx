@@ -1,0 +1,144 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Card from "../Components/Card";
+import { getDatabase, onValue, ref, remove, set } from "firebase/database";
+import { ICard } from "./CardCreator";
+
+interface Players {
+    [key: string]: {
+        score: number
+        hand: string[];
+    };
+}
+
+interface GameState {
+    cards?: {
+        black?: {
+            index: number,
+            seed: string[]
+        },
+        white?: {
+            index: number,
+            seed: string[]
+        }
+    }
+}
+
+export default () => {
+    const database = getDatabase();
+    const [nickname, setNickName] = useState<string>("");
+    const [players, setPlayers] = useState<Players>({});
+    const [cards, setCards] = useState<{ black: ICard, white: ICard }>({ black: {}, white: {} });
+    const [isHost, setIsHost] = useState<boolean>(false);
+    const [gameStateExists, setGameStateExists] = useState<boolean>(true);
+    const [gameState, setGameState] = useState<GameState | undefined>();
+    const [hand, setHand] = useState<string[]>([]);
+
+    const playersRef = ref(database, 'game/players');
+
+    useEffect(() => {
+        const nickname = localStorage.getItem('nickname');
+        nickname && setNickName(nickname);
+        const playerRef = ref(database, `game/players/${nickname}`);
+        onValue(playerRef, (snapshot) => {
+            if (snapshot.exists()) {
+                sessionStorage.setItem('score', snapshot.val().score);
+                sessionStorage.setItem('hand', JSON.stringify(snapshot.val().hand) || '[]');
+                setHand(snapshot.val().hand);
+            } else {
+                const score = sessionStorage.getItem('score');
+                const hand = sessionStorage.getItem('hand');
+                set(playerRef, { 
+                    score: score ? parseInt(score) : 0, 
+                    hand: hand ? JSON.parse(hand) : [] 
+                });
+            }
+        });
+        onValue(playersRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setPlayers(snapshot.val());
+                if (nickname === Object.keys(snapshot.val())[0]) setIsHost(true);
+            }
+        });
+        window.addEventListener('beforeunload', () => {
+            remove(playerRef);
+        });
+        return () => {
+            remove(playerRef);
+            setIsHost(false);
+        }
+    }, []);
+
+    const dealWhiteCards = () => {
+        let cardIndex = gameState?.cards?.white?.index || 0;
+        Object.values(players).forEach((player, index) => {
+            const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
+            set(playerHandRef, gameState?.cards?.white?.seed.slice(cardIndex, cardIndex + 5));
+            cardIndex = cardIndex + 6;
+        });
+    }
+
+    const shuffleCards = (color: 'black' | 'white') => {
+        let shuffled = Object.keys(cards[color])
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
+        const gameCardRef = ref(database, `game/cards/${color}`);
+        set(gameCardRef, { seed: shuffled, index: 0 });
+        setGameState({
+            ...gameState,
+            cards: {
+                ...gameState?.cards,
+                [color]: {
+                    seed: shuffled,
+                    index: 0
+                }
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (isHost) {
+            const cardsRef = ref(database, "cards");
+            onValue(cardsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    setCards(snapshot.val());
+                }
+            });
+            let gameCardsRef = ref(database, "game/cards");
+            onValue(gameCardsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    setGameStateExists(true);
+                    setGameState({ ...gameState, cards: snapshot.val() });
+                } else {
+                    setGameStateExists(false);
+                }
+            });
+        }
+    }, [isHost]);
+
+    useEffect(() => {
+        if (isHost && cards && !gameStateExists) {
+            shuffleCards('black');
+            shuffleCards('white');
+            dealWhiteCards();
+            setGameStateExists(true);
+        }
+    }, [gameStateExists, cards])
+
+    return (
+        <div className="row col-12">
+            <div className="col-11">
+                <h1 className="offset-4">Detroit Against Humanity<span className="offset-3"><Link to="/">Home</Link></span></h1>
+                <Card color="black" text={cards?.black[gameState?.cards?.black?.seed[gameState.cards.black.index] || 0]} />
+                <div className="row col offset-1">
+                    {hand.map(card => <Card color="white" text={cards.white[card]} />)}
+                </div>
+            </div>
+            <div className="col-1" style={{ borderLeft: '1px solid black', height: '100vh' }}>
+                <h3>Scoreboard:</h3>
+                {Object.keys(players).map((player, index) => <p key={index}>{player}: {players[player].score}</p>)}
+            </div>
+        </div>
+    );
+};

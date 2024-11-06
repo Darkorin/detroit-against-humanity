@@ -1,15 +1,15 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Card from "./Components/Card";
 import CardCreator from "./Pages/CardCreator";
+import HomePage from "./Pages/HomePage";
+import Game from "./Pages/Game";
 
-interface RouterProps {}
-
-export default (props: RouterProps) => {
+export default () => {
   return (
     <Router>
       <Routes>
-      <Route path="*" element={<CardCreator />} />
+        <Route path="/card-creator" element={<CardCreator />} />
+        <Route path="/game" element={<Game />} />
+        <Route path="/*" element={<HomePage />} />
       </Routes>
     </Router>
   );
