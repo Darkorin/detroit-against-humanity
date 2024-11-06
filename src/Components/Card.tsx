@@ -12,8 +12,10 @@ export default (props: CardProps) => {
     const oppositeColor = props.color === 'black' ? 'white' : 'black';
     return (
         <div style={{
+            minWidth: '300px',
             width: '14vw',
             height: '15vw',
+            minHeight: '200px',
             backgroundColor: props.color,
             border: '1px solid black',
             borderRadius: '15px',

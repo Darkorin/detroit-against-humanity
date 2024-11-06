@@ -43,18 +43,18 @@ export default () => {
 
     return (
         <div>
-            <h1 className="offset-4">Create Your Cards Here!<span className="offset-6"><Link to="/">Home</Link></span></h1>
-            <div className="row offset-4">
-                <Card color="black" text="Enter Text Below" />
-                <Card color="white" text="Enter Text Below" />
-            </div>
-            <div className="row offset-4">
-                <textarea style={{ width: '14vw', margin: 16, resize: 'none' }} value={blackCardState} onChange={(e) => setBlackCardState(e.target?.value)} />
-                <textarea style={{ width: '14vw', margin: 16, resize: 'none' }} value={whiteCardState} onChange={(e) => setWhiteCardState(e.target?.value)} />
-            </div>
-            <div className="row offset-4">
-                <button style={{ width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
-                <button style={{ width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
+            <h1 className="offset-md-4">Create Your Cards Here!<span className="offset-6"><Link to="/">Home</Link></span></h1>
+            <div className="row offset-md-4">
+                <div className="col-6 col-xl-5">
+                    <Card color="black" text="Enter Text Below" />
+                    <textarea style={{ minWidth: 300, width: '14vw', margin: 16, resize: 'none' }} value={blackCardState} onChange={(e) => setBlackCardState(e.target?.value)} />
+                    <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
+                </div>
+                <div className="col col-xl-5">
+                    <Card color="white" text="Enter Text Below" />
+                    <textarea style={{ minWidth: 300, width: '14vw', margin: 16, resize: 'none' }} value={whiteCardState} onChange={(e) => setWhiteCardState(e.target?.value)} />
+                    <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
+                </div>
             </div>
             <div className="row offset-1 col-11">
                 {Object.values(cards.black).map((card, index) => <Card color="black" text={card} deleteBtn handleDelete={() => handleDelete('black', index)}/>)}

@@ -13,13 +13,13 @@ export default () => {
 
     const playGame = () => {
         localStorage.setItem('nickname', nickname);
-        navigate('/game')
+        navigate('?game')
     }
 
     return (
         <div className="row offset-4">
             <h1>Detroit Against Humanity</h1>
-            <Link to="/card-creator" style={{marginTop: 16, marginBottom: 20}}>Create Cards</Link>
+            <Link to="?card-creator" style={{marginTop: 16, marginBottom: 20}}>Create Cards</Link>
             <div style={{width: '5vw', margin: 16, marginBottom: 8, marginLeft: 0}}>
                 Nickname: <input type="text" value={nickname} onChange={(e) => setNickName(e.target.value)}/>
                 <button disabled={!nickname} onClick={() => playGame()}>Play Game(UNDER CONSTRUCTION)</button>

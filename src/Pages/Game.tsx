@@ -73,6 +73,7 @@ export default () => {
         let cardIndex = gameState?.cards?.white?.index || 0;
         Object.values(players).forEach((player, index) => {
             const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
+            if(cardIndex+5 > (gameState?.cards?.white?.seed.length || 0)) shuffleCards('white');
             set(playerHandRef, gameState?.cards?.white?.seed.slice(cardIndex, cardIndex + 5));
             cardIndex = cardIndex + 6;
         });
@@ -129,7 +130,7 @@ export default () => {
     return (
         <div className="row col-12">
             <div className="col-11">
-                <h1 className="offset-4">Detroit Against Humanity<span className="offset-3"><Link to="/">Home</Link></span></h1>
+                <h1 className="offset-md-4">Detroit Against Humanity<span className="offset-3"><Link to="/">Home</Link></span></h1>
                 <Card color="black" text={cards?.black[gameState?.cards?.black?.seed[gameState.cards.black.index] || 0]} />
                 <div className="row col offset-1">
                     {hand.map(card => <Card color="white" text={cards.white[card]} />)}

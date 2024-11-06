@@ -1,3 +1,4 @@
+import { BrowserRouter as Router } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 
 import AppRouter from "./AppRouter";
@@ -15,5 +16,8 @@ const firebaseConfig = {
 export default () => {
   initializeApp(firebaseConfig);
 
-  return <AppRouter />;
+  return (
+    <Router>
+      <AppRouter />
+    </Router>);
 };

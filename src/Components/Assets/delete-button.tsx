@@ -5,7 +5,7 @@ interface DeleteButtonIconProps {
 export const DeleteButtonIcon = (props: DeleteButtonIconProps) => {
 	return (
 		<svg fill={props.color ? props.color : '#000000'} version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" 
-			width="1vw" height="1vw" viewBox="0 0 482.428 482.429" cursor="pointer">
+			style={{minWidth: 20, minHeight: 20, width: "1vw", height: "1vw"}} viewBox="0 0 482.428 482.429" cursor="pointer">
 			<g>
 				<g>
 					<path d="M381.163,57.799h-75.094C302.323,25.316,274.686,0,241.214,0c-33.471,0-61.104,25.315-64.85,57.799h-75.098
