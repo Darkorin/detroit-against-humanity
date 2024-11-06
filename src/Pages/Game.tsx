@@ -101,11 +101,11 @@ export default () => {
         let cardIndex = gameState?.cards?.white?.index || 0;
         Object.values(players).forEach((player, index) => {
             const playerHandRef = ref(database, `game/players/${Object.keys(players)[index]}/hand`);
-            if(cardIndex+5 > (gameState?.cards?.white?.seed.length || 0)) {
+            if(cardIndex+5 > (gameState?.cards?.white?.seed?.length || 0)) {
                 shuffleCards('white');
                 cardIndex = 0;
             };
-            set(playerHandRef, gameState?.cards?.white?.seed.slice(cardIndex, cardIndex + 5));
+            set(playerHandRef, gameState?.cards?.white?.seed?.slice(cardIndex, cardIndex + 5) || []);
             cardIndex = cardIndex + 6;
         });
     }
@@ -122,21 +122,29 @@ export default () => {
     }, [isHost]);
 
     useEffect(() => {
-        if (isHost && cards && !gameStateExists) {
+        if (isHost && cards.black && cards.white && !gameStateExists) {
             shuffleCards('black');
             shuffleCards('white');
             dealWhiteCards();
             setGameStateExists(true);
         }
-    }, [gameStateExists, cards])
+    }, [gameStateExists, cards.black, cards.white]);
+
+    const getBlackCardText = () => {
+        const cardIndex = gameState?.cards?.black?.index || 0;
+        const cardSeed = gameState?.cards?.black?.seed;
+        if (cardSeed) {
+            return cards?.black[cardSeed[cardIndex]];
+        } else return "";
+    }
 
     return (
         <div className="row col-12">
             <div className="col-11">
                 <h1 className="offset-md-4">Detroit Against Humanity<span className="offset-3"><Link to="/">Home</Link></span></h1>
-                <Card color="black" text={cards?.black[gameState?.cards?.black?.seed[gameState.cards.black.index] || 0]} />
+                <Card color="black" text={getBlackCardText()} />
                 <div className="row col offset-1">
-                    {hand.map(card => <Card color="white" text={cards.white[card]} />)}
+                    {hand?.map(card => <Card color="white" text={cards.white[card]} />)}
                 </div>
             </div>
             <div className="col-1" style={{ borderLeft: '1px solid black', minHeight: '100vh' }}>
