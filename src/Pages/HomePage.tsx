@@ -22,7 +22,7 @@ export default () => {
       <Link to="?card-creator" style={{ marginTop: 16, marginBottom: 20 }}>
         Create Cards
       </Link>
-      <div className="row col-4">
+      <div className="col-4">
         <h4 className="col">Nickname:</h4>
         <input
           className="col"
