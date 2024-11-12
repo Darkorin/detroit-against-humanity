@@ -62,6 +62,7 @@ export default (props: CardProps) => {
             resize: "none",
             border: "none",
             outline: "none",
+            height: '100%'
           }}
           onChange={props.onChange}
         />
