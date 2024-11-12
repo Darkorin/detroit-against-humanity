@@ -169,8 +169,9 @@ export default () => {
               <ClearIcon
                 fontSize="small"
                 color="error"
+                style={{ cursor: "pointer" }}
                 onClick={() => {
-                  const playerRef = ref(database, `game/players/${player[1]}`);
+                  const playerRef = ref(database, `game/players/${player[0]}`);
                   remove(playerRef);
                 }}
               />
