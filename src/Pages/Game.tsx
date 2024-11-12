@@ -285,7 +285,10 @@ export default () => {
                     onClick={() => judgingSelect(player, isSelected)}
                   >
                     {gameMode === "reviewing" && (
-                      <h4>votes: {player[1].votes}</h4>
+                      <>
+                        <h4>Votes: {player[1].votes}</h4>
+                        <h4>Player: {player[0]}</h4>
+                      </>
                     )}
                     {player[1].submission &&
                       Object.entries(player[1].submission).map((submission) => {
