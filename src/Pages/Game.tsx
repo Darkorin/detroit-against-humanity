@@ -121,7 +121,7 @@ export default () => {
           </span>
         </h1>
         <Card color="black" text={blackCardText} />
-        <div style={{ borderTop: "1px solid black", paddingTop: 16 }}>
+        <div style={{ borderTop: "1px solid white", paddingTop: 16 }}>
           <div className="row">
             {hand && (
               <button
@@ -154,7 +154,7 @@ export default () => {
       </div>
       <div
         className="col-1"
-        style={{ borderLeft: "1px solid black", minHeight: "100vh" }}
+        style={{ borderLeft: "1px solid white", minHeight: "100vh" }}
       >
         <h3>Scoreboard:</h3>
         {Object.entries(players).map((player, index) => (

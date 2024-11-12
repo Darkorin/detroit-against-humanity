@@ -33,7 +33,7 @@ export default (props: CardProps) => {
         height: "15vw",
         minHeight: 200,
         backgroundColor: selected ? "darkcyan" : bgColor,
-        border: "1px solid black",
+        border: "1px solid white",
         borderRadius: "15px",
         margin: 16,
         color: "white",
