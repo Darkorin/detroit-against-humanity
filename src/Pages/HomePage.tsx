@@ -20,9 +20,9 @@ export default () => {
         <div className="row offset-4">
             <h1>Detroit Against Humanity</h1>
             <Link to="?card-creator" style={{marginTop: 16, marginBottom: 20}}>Create Cards</Link>
-            <div style={{width: '5vw', margin: 16, marginBottom: 8, marginLeft: 0}}>
-                Nickname: <input type="text" value={nickname} onChange={(e) => setNickName(e.target.value)}/>
-                <button disabled={!nickname} onClick={() => playGame()}>Play Game</button>
+            <div className="row col-4">
+                <h4 className="col">Nickname:</h4> <input className="col" type="text" value={nickname} onChange={(e) => setNickName(e.target.value)}/>
+                <button className="col" disabled={!nickname} onClick={() => playGame()}>Play Game</button>
             </div>
         </div>
     );
