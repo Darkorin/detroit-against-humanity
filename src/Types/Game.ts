@@ -15,7 +15,8 @@ export interface GameState {
 
 export interface Players {
     [key: string]: {
-        score: number
+        waiting: boolean;
+        score: number;
         hand: string[];
     };
 }
