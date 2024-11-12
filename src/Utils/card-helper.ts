@@ -17,7 +17,7 @@ export const shuffleCards = (
       shuffled.filter((card) => {
         let matchFound = false;
         Object.entries(players).forEach((player) => {
-          if (player[1].hand.includes(card)) matchFound = true;
+          if (player[1]?.hand?.includes(card)) matchFound = true;
         });
         return !matchFound;
       });
