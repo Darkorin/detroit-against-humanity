@@ -4,6 +4,7 @@ import { DeleteButtonIcon } from "./Assets/delete-button";
 interface CardProps {
   color: "black" | "white";
   text: string;
+  cardId?: string;
   size?: "small" | "medium" | "large";
   deleteBtn?: boolean;
   handleDelete?: Function;
@@ -11,6 +12,7 @@ interface CardProps {
   onClick?: Function;
   editable?: boolean;
   onChange?: (e: any) => void;
+  selected?: boolean;
 }
 
 export default (props: CardProps) => {
@@ -32,15 +34,15 @@ export default (props: CardProps) => {
         width: "14vw",
         height: "15vw",
         minHeight: 200,
-        backgroundColor: selected ? "darkcyan" : bgColor,
-        border: "1px solid white",
+        backgroundColor: props.selected || selected ? "darkcyan" : bgColor,
+        border: "1px solid gray",
         borderRadius: "15px",
         margin: 16,
         color: "white",
         padding: 20,
         cursor: props.selectable ? "pointer" : "auto",
       }}
-      onClick={handleClick}
+      onClick={props.onClick && handleClick}
     >
       {props.deleteBtn && (
         <div

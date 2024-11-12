@@ -38,9 +38,9 @@ export const shuffleBothPiles = (
         seed: shuffledwhite,
       },
     },
-  }
+  };
   setState(newGameState);
-  return newGameState
+  return newGameState;
 };
 
 export const getBlackCardText = (
@@ -62,13 +62,13 @@ export const dealwhiteCards = (
   cards: Cards,
   gameState?: GameState
 ) => {
+  const handSize = 5;
   let cardIndex = gameState?.cards?.white?.index || 0;
-  Object.values(players).forEach((player, index) => {
-    const playerHandRef = ref(
-      database,
-      `game/players/${Object.keys(players)[index]}/hand`
-    );
-    if (cardIndex + 5 > (gameState?.cards?.white?.seed?.length || 0)) {
+  Object.entries(players).forEach((player) => {
+    const playerHandRef = ref(database, `game/players/${player[0]}/hand`);
+    const numToDraw = handSize - (player[1]?.hand?.length || 0);
+
+    if (cardIndex + numToDraw > (gameState?.cards?.white?.seed?.length || 0)) {
       const shuffledwhite = shuffleCards("white", cards, database) || [];
       setState({
         ...gameState,
@@ -84,8 +84,11 @@ export const dealwhiteCards = (
     }
     set(
       playerHandRef,
-      gameState?.cards?.white?.seed?.slice(cardIndex, cardIndex + 5) || []
+      [
+        ...(players[player[0]]?.hand || []),
+        ...(gameState?.cards?.white?.seed?.slice(cardIndex, cardIndex + numToDraw) || []),
+      ]
     );
-    cardIndex = cardIndex + 6;
+    cardIndex = cardIndex + numToDraw;
   });
 };

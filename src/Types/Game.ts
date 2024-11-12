@@ -13,12 +13,19 @@ export interface GameState {
     }
 }
 
-export interface Players {
-    [key: string]: {
-        waiting: boolean;
-        score: number;
-        hand: string[];
+export interface Player {
+    waiting: boolean;
+    score: number;
+    hand: string[];
+    submission: {
+        [key: string]: string;
     };
+};
+
+export interface Players {
+    [key: string]: Player;
 }
+
+export type GameMode = "selecting" | "judging" | undefined;
 
 export interface Cards { black: ICard, white: ICard }
