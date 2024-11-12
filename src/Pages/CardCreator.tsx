@@ -13,7 +13,7 @@ export default () => {
 
     const [blackCardState, setBlackCardState] = useState<string>("");
     const [whiteCardState, setWhiteCardState] = useState<string>("");
-    const [cards, setCards] = useState<{ black: ICard, white: ICard }>({black: {}, white: {}});
+    const [cards, setCards] = useState<{ black: ICard, white: ICard }>({ black: {}, white: {} });
 
     const addCard = (type: 'black' | 'white') => {
         const cardsListRef = ref(database, `cards/${type}`);
@@ -46,18 +46,16 @@ export default () => {
             <h1 className="offset-md-4">Create Your Cards Here!<span className="offset-6"><Link to="/">Home</Link></span></h1>
             <div className="row offset-md-4">
                 <div className="col-6 col-xl-5">
-                    <Card color="black" text="Enter Text Below" />
-                    <textarea style={{ minWidth: 300, width: '14vw', margin: 16, resize: 'none' }} value={blackCardState} onChange={(e) => setBlackCardState(e.target?.value)} />
+                    <Card color="black" text={blackCardState} onChange={(e) => setBlackCardState(e.target?.value)} editable />
                     <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
                 </div>
                 <div className="col col-xl-5">
-                    <Card color="white" text="Enter Text Below" />
-                    <textarea style={{ minWidth: 300, width: '14vw', margin: 16, resize: 'none' }} value={whiteCardState} onChange={(e) => setWhiteCardState(e.target?.value)} />
+                    <Card color="white" text={whiteCardState} onChange={(e) => setWhiteCardState(e.target?.value)} editable />
                     <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
                 </div>
             </div>
             <div className="row offset-1 col-11">
-                {Object.values(cards.black).map((card, index) => <Card color="black" text={card} deleteBtn handleDelete={() => handleDelete('black', index)}/>)}
+                {Object.values(cards.black).map((card, index) => <Card color="black" text={card} deleteBtn handleDelete={() => handleDelete('black', index)} />)}
                 {Object.values(cards.white).map((card, index) => <Card color="white" text={card} deleteBtn handleDelete={() => handleDelete('white', index)} />)}
             </div>
         </div>
