@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: grey;
+  background-color: #1a1a1b;
 }
 
 svg {
@@ -15,4 +15,21 @@ svg {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h1, h2, h3, h4, p {
+  color: white;
+}
+
+::placeholder {
+  color: inherit;
+}
+
+button {
+  background-color: lightblue;
+  border-radius: 15px;
+}
+
+a {
+  color: darkcyan;
 }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Card from "../Components/Card";
 import { getDatabase, onValue, ref, remove, set } from "firebase/database";
 import {
-  dealWhiteCards,
+  dealwhiteCards,
   getBlackCardText,
   shuffleBothPiles,
   shuffleCards,
@@ -99,7 +99,7 @@ export default () => {
         gameState
       );
       set(gameStateRef, true);
-      dealWhiteCards(setGameState, database, players, cards, newGameState);
+      dealwhiteCards(setGameState, database, players, cards, newGameState);
     }
   };
 

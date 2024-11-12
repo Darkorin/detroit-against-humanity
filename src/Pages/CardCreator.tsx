@@ -12,7 +12,7 @@ export default () => {
     const database = getDatabase();
 
     const [blackCardState, setBlackCardState] = useState<string>("");
-    const [whiteCardState, setWhiteCardState] = useState<string>("");
+    const [whiteCardState, setwhiteCardState] = useState<string>("");
     const [cards, setCards] = useState<{ black: ICard, white: ICard }>({ black: {}, white: {} });
 
     const addCard = (type: 'black' | 'white') => {
@@ -20,7 +20,7 @@ export default () => {
         const newCardRef = push(cardsListRef);
         set(newCardRef, type === 'black' ? blackCardState : whiteCardState);
         setBlackCardState('');
-        setWhiteCardState('');
+        setwhiteCardState('');
     }
 
 
@@ -47,11 +47,11 @@ export default () => {
             <div className="row offset-md-4">
                 <div className="col-6 col-xl-5">
                     <Card color="black" text={blackCardState} onChange={(e) => setBlackCardState(e.target?.value)} editable />
-                    <button style={{ borderRadius: '15px', minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
+                    <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('black')}>add card</button>
                 </div>
                 <div className="col col-xl-5">
-                    <Card color="white" text={whiteCardState} onChange={(e) => setWhiteCardState(e.target?.value)} editable />
-                    <button style={{ borderRadius: '15px', minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
+                    <Card color="white" text={whiteCardState} onChange={(e) => setwhiteCardState(e.target?.value)} editable />
+                    <button style={{ minWidth: 300, width: '14vw', margin: 16 }} onClick={() => addCard('white')}>add card</button>
                 </div>
             </div>
             <div className="row offset-1 col-11">

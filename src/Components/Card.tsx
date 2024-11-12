@@ -15,6 +15,7 @@ interface CardProps {
 
 export default (props: CardProps) => {
   const oppositeColor = props.color === "black" ? "white" : "black";
+  const bgColor = props.color === "black" ? "black" : "grey";
   const [selected, setSelected] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -31,11 +32,11 @@ export default (props: CardProps) => {
         width: "14vw",
         height: "15vw",
         minHeight: 200,
-        backgroundColor: selected ? "lightblue" : props.color,
+        backgroundColor: selected ? "darkcyan" : bgColor,
         border: "1px solid black",
         borderRadius: "15px",
         margin: 16,
-        color: oppositeColor,
+        color: "white",
         padding: 20,
         cursor: props.selectable ? "pointer" : "auto",
       }}
@@ -55,7 +56,7 @@ export default (props: CardProps) => {
           value={props.text}
           placeholder="Enter Text Here"
           style={{
-            color: oppositeColor,
+            color: "white",
             backgroundColor: "transparent",
             fontSize: "1.5rem",
             fontWeight: "500",

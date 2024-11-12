@@ -25,7 +25,7 @@ export const shuffleBothPiles = (
   gameState?: GameState
 ) => {
   const shuffledBlack = shuffleCards("black", cards, database) || [];
-  const shuffledWhite = shuffleCards("white", cards, database) || [];
+  const shuffledwhite = shuffleCards("white", cards, database) || [];
   const newGameState = {
     ...gameState,
     cards: {
@@ -35,7 +35,7 @@ export const shuffleBothPiles = (
       },
       white: {
         index: 0,
-        seed: shuffledWhite,
+        seed: shuffledwhite,
       },
     },
   }
@@ -55,7 +55,7 @@ export const getBlackCardText = (
   } else setText("");
 };
 
-export const dealWhiteCards = (
+export const dealwhiteCards = (
   setState: Function,
   database: Database,
   players: Players,
@@ -69,14 +69,14 @@ export const dealWhiteCards = (
       `game/players/${Object.keys(players)[index]}/hand`
     );
     if (cardIndex + 5 > (gameState?.cards?.white?.seed?.length || 0)) {
-      const shuffledWhite = shuffleCards("white", cards, database) || [];
+      const shuffledwhite = shuffleCards("white", cards, database) || [];
       setState({
         ...gameState,
         cards: {
           ...gameState?.cards,
           white: {
             index: 0,
-            seed: shuffledWhite,
+            seed: shuffledwhite,
           },
         },
       });
