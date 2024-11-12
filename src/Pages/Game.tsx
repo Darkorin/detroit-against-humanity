@@ -360,7 +360,7 @@ export default () => {
             )}{" "}
             {player[0]}:{" "}
             {scoreSnapShot[player[0]] && scoreSnapShot[player[0]].score}{" "}
-            {isHost && (
+            (
               <ClearIcon
                 fontSize="small"
                 color="error"
@@ -370,7 +370,7 @@ export default () => {
                   remove(playerRef);
                 }}
               />
-            )}
+            )
           </p>
         ))}
       </div>
