@@ -23,14 +23,14 @@ export default () => {
         Create Cards
       </Link>
       <div className="row col-4">
-        <h4 className="col-3">Nickname:</h4>
+        <h4 className="col">Nickname:</h4>
         <input
-          className="col-4"
+          className="col"
           type="text"
           value={nickname}
           onChange={(e) => setNickName(e.target.value)}
         />
-        <button className="col-3 offset-1" disabled={!nickname} onClick={() => playGame()}>
+        <button className="col" disabled={!nickname} onClick={() => playGame()}>
           Play Game
         </button>
       </div>
