@@ -98,6 +98,7 @@ export default () => {
           set(playerRef, {
             waiting: true,
             score: 0,
+            votes: 0,
             hand: [],
           });
         }
@@ -121,6 +122,7 @@ export default () => {
         cards,
         database,
         setGameState,
+        players,
         gameState
       );
       set(gameStateRef, true);
@@ -142,7 +144,26 @@ export default () => {
     const waitingRef = ref(database, `game/players/${nickname}/waiting`);
     set(waitingRef, true);
     setScoreSnapShot({ ...players });
-    if (isHost && gameMode === "selecting" && (hand?.length || 0) < 5) {
+    if (isHost && gameMode !== "reviewing") {
+      Object.entries(players).forEach((player) => {
+        if (player[1].votes > 0) {
+          const votesRef = ref(database, `game/players/${player[0]}/votes`);
+          set(votesRef, 0);
+        }
+      });
+    }
+    if (
+      isHost &&
+      gameMode === "selecting" &&
+      (hand?.length || 0) < parseInt(process.env.REACT_APP_HAND_SIZE || "0")
+    ) {
+      Object.entries(players).forEach((player) => {
+        const submissionRef = ref(
+          database,
+          `game/players/${player[0]}/submission`
+        );
+        remove(submissionRef);
+      });
       dealwhiteCards(setGameState, database, players, cards, gameState);
     }
   }, [gameMode]);
@@ -173,6 +194,7 @@ export default () => {
         });
         if (doneWaiting) {
           setNextRound(true);
+          set(gameModeRef, "reviewing");
           handRefArr.forEach((hRef, index) => {
             const newHand = [...(Object.values(players)[index].hand || [])];
             nickname &&
@@ -204,6 +226,8 @@ export default () => {
     setWaiting(false);
     const scoreRef = ref(database, `game/players/${selectedPlayer}/score`);
     set(scoreRef, increment(1));
+    const votesRef = ref(database, `game/players/${selectedPlayer}/votes`);
+    set(votesRef, increment(1));
     const waitingRef = ref(database, `game/players/${nickname}/waiting`);
     set(waitingRef, false);
   };
@@ -218,7 +242,7 @@ export default () => {
           </span>
         </h1>
         <Card color="black" text={blackCardText} />
-        {gameMode === "judging" && (
+        {(gameMode === "judging" || gameMode === "reviewing") && (
           <>
             <button
               className="col-1 offset-1"
@@ -260,6 +284,9 @@ export default () => {
                     }}
                     onClick={() => judgingSelect(player, isSelected)}
                   >
+                    {gameMode === "reviewing" && (
+                      <h4>votes: {player[1].votes}</h4>
+                    )}
                     {player[1].submission &&
                       Object.entries(player[1].submission).map((submission) => {
                         return (

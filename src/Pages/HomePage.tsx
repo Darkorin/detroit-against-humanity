@@ -22,7 +22,7 @@ export default () => {
             <Link to="?card-creator" style={{marginTop: 16, marginBottom: 20}}>Create Cards</Link>
             <div style={{width: '5vw', margin: 16, marginBottom: 8, marginLeft: 0}}>
                 Nickname: <input type="text" value={nickname} onChange={(e) => setNickName(e.target.value)}/>
-                <button disabled={!nickname} onClick={() => playGame()}>Play Game(UNDER CONSTRUCTION)</button>
+                <button disabled={!nickname} onClick={() => playGame()}>Play Game</button>
             </div>
         </div>
     );
