@@ -360,17 +360,15 @@ export default () => {
             )}{" "}
             {player[0]}:{" "}
             {scoreSnapShot[player[0]] && scoreSnapShot[player[0]].score}{" "}
-            (
-              <ClearIcon
-                fontSize="small"
-                color="error"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  const playerRef = ref(database, `game/players/${player[0]}`);
-                  remove(playerRef);
-                }}
-              />
-            )
+            <ClearIcon
+              fontSize="small"
+              color="error"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                const playerRef = ref(database, `game/players/${player[0]}`);
+                remove(playerRef);
+              }}
+            />
           </p>
         ))}
       </div>
