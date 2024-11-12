@@ -8,6 +8,10 @@ body {
   background-color: grey;
 }
 
+svg {
+  vertical-align: text-bottom;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

@@ -13,21 +13,6 @@ export default () => {
 
   const nickname = localStorage.getItem('nickname');
 
-  useEffect(() => {
-    window.addEventListener('beforeunload', () => {
-      if (nickname) {
-        const playerRef = ref(database, `game/players/${nickname}`);
-        remove(playerRef);
-      }
-    });
-    return () => {
-      if (nickname) {
-        const playerRef = ref(database, `game/players/${nickname}`);
-        remove(playerRef);
-      }
-    }
-  }, [])
-
   return (
     <>
       {paramsArry[0]?.includes('card-creator') && <CardCreator />}

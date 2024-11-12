@@ -11,6 +11,7 @@ import {
 import { Cards, GameState, Players } from "../Types/Game";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoneIcon from "@mui/icons-material/Done";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export default () => {
   const database = getDatabase();
@@ -42,6 +43,8 @@ export default () => {
         } else {
           setIsHost(false);
         }
+      } else {
+        setIsHost(true);
       }
     });
     const cardsRef = ref(database, "cards");
@@ -62,22 +65,16 @@ export default () => {
 
   useEffect(() => {
     if (nickname && gameStateExists !== undefined) {
-      !gameStateExists && sessionStorage.setItem("hand", "[]");
-
       onValue(playerRef, (snapshot) => {
         if (snapshot.exists()) {
-          sessionStorage.setItem("score", snapshot.val().score || "0");
           const hand = gameStateExists ? snapshot.val().hand : [];
-          sessionStorage.setItem("hand", JSON.stringify(hand) || "[]");
           setHand(snapshot.val().hand);
           setWaiting(snapshot.val().waiting);
         } else {
-          const score = sessionStorage.getItem("score");
-          const hand = gameStateExists ? sessionStorage.getItem("hand") : "[]";
           set(playerRef, {
             waiting: true,
-            score: score ? parseInt(score) : 0,
-            hand: hand ? JSON.parse(hand) : [],
+            score: 0,
+            hand: [],
           });
         }
       });
@@ -85,18 +82,11 @@ export default () => {
   }, [gameStateExists]);
 
   useEffect(() => {
-    if (gameStateExists !== undefined && hand !== undefined) {
-      sessionStorage.setItem("hand", JSON.stringify(hand) || "[]");
-    }
-  }, [hand]);
-
-  useEffect(() => {
     getBlackCardText(setBlackCardText, gameState, cards);
   }, [gameState, cards.black, cards.white]);
 
   const handleNewGame = () => {
     if (gameStateExists) {
-      sessionStorage.setItem("hand", "[]");
       remove(gameCardsRef);
       set(gameStateRef, false);
       setGameState(undefined);
@@ -174,7 +164,17 @@ export default () => {
             ) : (
               <DoneIcon fontSize="small" color="success" />
             )}{" "}
-            {player[0]}: {players[player[0]].score}
+            {player[0]}: {players[player[0]].score}{" "}
+            {isHost && (
+              <ClearIcon
+                fontSize="small"
+                color="error"
+                onClick={() => {
+                  const playerRef = ref(database, `game/players/${player[1]}`);
+                  remove(playerRef);
+                }}
+              />
+            )}
           </p>
         ))}
       </div>
