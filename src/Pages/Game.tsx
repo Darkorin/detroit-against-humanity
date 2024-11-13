@@ -89,6 +89,7 @@ export default () => {
 
   useEffect(() => {
     if (nickname && gameStateExists !== undefined) {
+      getBlackCardText(setBlackCardText, database, gameState, cards);
       setScoreSnapShot(players);
       onValue(playerRef, (snapshot) => {
         if (snapshot.exists()) {
@@ -138,6 +139,7 @@ export default () => {
   useEffect(() => {
     setSelectedCards({});
     setSelectedPlayer("");
+    getBlackCardText(setBlackCardText, database, gameState, cards);
     const waitingRef = ref(database, `game/players/${nickname}/waiting`);
     set(waitingRef, true);
     setScoreSnapShot({ ...players });
@@ -154,7 +156,6 @@ export default () => {
       gameMode === "selecting" &&
       (hand?.length || 0) < parseInt(process.env.REACT_APP_HAND_SIZE || "0")
     ) {
-      getBlackCardText(setBlackCardText, database, gameState, cards);
       Object.entries(players).forEach((player) => {
         const submissionRef = ref(
           database,
@@ -203,6 +204,8 @@ export default () => {
                 }
               );
             set(hRef, newHand);
+            const cardIndexRef = ref(database, "game/cards/black/index");
+            set(cardIndexRef, increment(1));
           });
         }
       }
