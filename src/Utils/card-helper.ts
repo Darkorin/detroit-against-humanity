@@ -1,4 +1,4 @@
-import { Database, ref, set } from "firebase/database";
+import { Database, increment, ref, set } from "firebase/database";
 import { ICard } from "../Pages/CardCreator";
 import { Cards, GameState, Players } from "../Types/Game";
 
@@ -56,13 +56,16 @@ export const shuffleBothPiles = (
 
 export const getBlackCardText = (
   setText: Function,
+  database: Database,
   gameState?: GameState,
   cards?: Cards
 ) => {
+  const cardIndexRef = ref(database, "game/cards/black/index");
   const cardIndex = gameState?.cards?.black?.index || 0;
   const cardSeed = gameState?.cards?.black?.seed;
   if (cardSeed) {
     setText(cards?.black[cardSeed[cardIndex]]);
+    set(cardIndexRef, increment(1));
   } else setText("");
 };
 

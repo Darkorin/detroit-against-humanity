@@ -106,10 +106,6 @@ export default () => {
     }
   }, [gameStateExists]);
 
-  useEffect(() => {
-    getBlackCardText(setBlackCardText, gameState, cards);
-  }, [gameState, cards.black, cards.white]);
-
   const handleNewGame = () => {
     if (gameStateExists) {
       remove(gameCardsRef);
@@ -126,6 +122,7 @@ export default () => {
         gameState
       );
       set(gameStateRef, true);
+      getBlackCardText(setBlackCardText, database, newGameState, cards);
       dealwhiteCards(setGameState, database, players, cards, newGameState);
     }
   };
@@ -157,6 +154,7 @@ export default () => {
       gameMode === "selecting" &&
       (hand?.length || 0) < parseInt(process.env.REACT_APP_HAND_SIZE || "0")
     ) {
+      getBlackCardText(setBlackCardText, database, gameState, cards);
       Object.entries(players).forEach((player) => {
         const submissionRef = ref(
           database,
