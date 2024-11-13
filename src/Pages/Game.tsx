@@ -204,8 +204,6 @@ export default () => {
                 }
               );
             set(hRef, newHand);
-            const cardIndexRef = ref(database, "game/cards/black/index");
-            set(cardIndexRef, increment(1));
           });
         }
       }
@@ -256,6 +254,8 @@ export default () => {
               <button
                 className="col-1 offset-1"
                 onClick={() => {
+                  const cardIndexRef = ref(database, "game/cards/black/index");
+                  set(cardIndexRef, increment(1));
                   set(gameModeRef, "selecting");
                 }}
                 disabled={!nextRound}
