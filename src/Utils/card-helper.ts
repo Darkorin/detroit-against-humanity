@@ -60,12 +60,10 @@ export const getBlackCardText = (
   gameState?: GameState,
   cards?: Cards
 ) => {
-  const cardIndexRef = ref(database, "game/cards/black/index");
   const cardIndex = gameState?.cards?.black?.index || 0;
   const cardSeed = gameState?.cards?.black?.seed;
   if (cardSeed) {
     setText(cards?.black[cardSeed[cardIndex]]);
-    set(cardIndexRef, increment(1));
   } else setText("");
 };
 
